@@ -151,21 +151,13 @@ class JettyService : IntentService("JettyService"), LifeCycle.Listener {
 
         }
 
-        /**
-         * Starts this service to perform action Foo with the given parameters. If
-         * the service is already performing a task this action will be queued.
-         *
-         * @see IntentService
-         */
-        // TODO: Customize helper method
-        @JvmStatic
-        fun start(context: Context, action: String, extras: Bundle) {
-            val intent = Intent(context, JettyService::class.java).apply {
-                this.action = action
-                putExtras(extras)
-            }
-            context.startService(intent)
-        }
-
     }
+}
+
+fun start(context: Context, action: String, extras: Bundle) {
+    val intent = Intent(context, JettyService::class.java).apply {
+        this.action = action
+        putExtras(extras)
+    }
+    context.startService(intent)
 }

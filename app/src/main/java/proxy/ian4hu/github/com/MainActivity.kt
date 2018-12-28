@@ -68,14 +68,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun doJettyStart() {
-        JettyService.start(this, ACTION_START, Bundle.EMPTY);
+        start(this, ACTION_START, Bundle.EMPTY);
     }
 
     fun doJettyStop() {
-        JettyService.start(this, ACTION_STOP, Bundle.EMPTY);
+        start(this, ACTION_STOP, Bundle.EMPTY);
     }
 
     fun doJettyStatus() {
-        JettyService.start(this, ACTION_STATUS, Bundle.EMPTY)
+        start(this, ACTION_STATUS, Bundle.EMPTY)
     }
 }
