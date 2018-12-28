@@ -3,7 +3,7 @@ package proxy.ian4hu.github.com
 import org.eclipse.jetty.client.api.Request
 import org.eclipse.jetty.http.HttpHeader
 import javax.servlet.http.HttpServletRequest
-import org.eclipse.jetty.proxy.ProxyServlet as JettyProxtServlet
+import org.eclipse.jetty.proxy.AsyncProxyServlet as JettyProxtServlet
 
 class ProxyServlet : JettyProxtServlet() {
 
@@ -14,6 +14,13 @@ class ProxyServlet : JettyProxtServlet() {
         transparent = servletConfig.getInitParameter("transparent").orEmpty().toBoolean()
     }
 
+    override fun addProxyHeaders(clientRequest: HttpServletRequest?, proxyRequest: Request?) {
+        if (!transparent) {
+            super.addProxyHeaders(clientRequest, proxyRequest)
+        }
+    }
+
+    /*
     override fun customizeProxyRequest(proxyRequest: Request, request: HttpServletRequest) {
         super.customizeProxyRequest(proxyRequest, request)
         if (transparent) {
@@ -25,4 +32,5 @@ class ProxyServlet : JettyProxtServlet() {
             headers.remove(HttpHeader.X_FORWARDED_SERVER)
         }
     }
+    */
 }

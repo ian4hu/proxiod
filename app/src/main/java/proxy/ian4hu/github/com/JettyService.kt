@@ -7,14 +7,13 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import org.eclipse.jetty.proxy.ConnectHandler
 import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.servlet.FilterMapping
-import org.eclipse.jetty.servlet.Holder
-import org.eclipse.jetty.servlet.ServletContextHandler
-import org.eclipse.jetty.servlet.ServletHandler
+import org.eclipse.jetty.servlet.*
 import org.eclipse.jetty.util.component.LifeCycle
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.servlet.DispatcherType
+
+import org.eclipse.jetty.servlet.Source as JettyHolderSource;
 
 // TODO: Rename actions, choose action names that describe tasks that this
 // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
@@ -110,11 +109,10 @@ class JettyService : IntentService("JettyService"), LifeCycle.Listener {
 
     companion object {
         @JvmStatic
-        val server: Server;
+        val server: Server = Server(8080)
 
         init {
 
-            server = Server(8080);
             //server.isDumpAfterStart = true
 
             val servletContextHandler = ServletContextHandler()
@@ -124,13 +122,13 @@ class JettyService : IntentService("JettyService"), LifeCycle.Listener {
 
                 val proxyServlet = addServletWithMapping(proxy.ian4hu.github.com.ProxyServlet::class.java, "/").apply {
                     isAsyncSupported = true
-                    setInitParameter("maxThreads", "16")
-                    setInitParameter("maxConnections", "256")
+                    //setInitParameter("maxThreads", "16")
+                    //setInitParameter("maxConnections", "256")
                     setInitParameter("transparent", "true")
                 }
 
                 //FilterMapping
-                val noneProxyFilter = newFilterHolder(Holder.Source.EMBEDDED).apply {
+                val noneProxyFilter = newFilterHolder(JettyHolderSource.EMBEDDED).apply {
                     heldClass = NoneProxyFilter::class.java
                 }
 
@@ -141,7 +139,7 @@ class JettyService : IntentService("JettyService"), LifeCycle.Listener {
                 }
                 addFilter(noneProxyFilter, filterMapping)
 
-                newServletHolder(Holder.Source.EMBEDDED).apply {
+                newServletHolder(JettyHolderSource.EMBEDDED).apply {
                     heldClass = UiServlet::class.java
                     isAsyncSupported = true
                     name = "ui"

@@ -19,3 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#-dontwarn javax.naming.**
+#-dontwarn java.lang.management.**
+#-dontwarn org.eclipse.jetty.**.jmx.**
+#-dontwarn javax.imageio.**
+#-dontwarn java.awt.**
+#-dontwarn org.ietf.jgss.**
+#-dontwarn java.util.concurrent.ConcurrentHashMap
+#-dontwarn java.beans.**
+
+-dontobfuscate
+
+-ignorewarnings

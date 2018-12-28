@@ -12,24 +12,24 @@ class UiServlet : HttpServlet() {
 
     override fun service(req: HttpServletRequest, resp: HttpServletResponse) {
         //super.service(req, resp);
-        val builder = StringBuilder()
+        val appendable: Appendable = resp.writer
         val protocol = req.protocol
         val servletPath = req.servletPath
         val queryString = req.queryString
-        builder.append(protocol).append(" ").append(servletPath)
+        appendable.append(protocol).append(" ").append(servletPath)
         if (queryString != null) {
-            builder.append("?").append(queryString)
+            appendable.append("?").append(queryString)
         }
-        builder.append("\n")
+        appendable.append("\n")
         req.headerNames.toList().forEach { headerName ->
-            builder.append(headerName).append(": ")
-            req.getHeaders(headerName).toList().joinTo(builder, ", ")
-            builder.append("\n")
+            appendable.append(headerName).append(": ")
+            req.getHeaders(headerName).toList().joinTo(appendable, ", ")
+            appendable.append("\n")
         }
 
         resp.setHeader("content-type", "text/plain;charset=utf-8")
-        val content = builder.toString()
-        resp.writer.println(content)
-        logger.info(content)
+        //val content = builder.toString()
+        //resp.writer.println(content)
+        //logger.info(content)
     }
 }

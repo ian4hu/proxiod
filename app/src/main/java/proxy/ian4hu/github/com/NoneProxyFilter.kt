@@ -11,6 +11,8 @@ class NoneProxyFilter : Filter {
 
     private val localhostNameCache: LruCache<String, Boolean> = LruCache(512)
 
+    private var resolve = false
+
     override fun destroy() {
         localhostNameCache.evictAll()
     }
@@ -33,6 +35,9 @@ class NoneProxyFilter : Filter {
     }
 
     override fun init(filterConfig: FilterConfig?) {
+        filterConfig?.run {
+            resolve = "true".equals(getInitParameter("resolve"), true)
+        }
         val localhostAddress = NetworkInterface.getNetworkInterfaces().toList()
                 .flatMap { it.inetAddresses.toList() }
                 .map { it.hostAddress.substringBefore('%') }
@@ -40,11 +45,15 @@ class NoneProxyFilter : Filter {
         localhostAddress.forEach {
             localhostNameCache.put(it, true)
         }
+        InetAddress.getLocalHost().run {
+            localhostNameCache.put(hostName, true)
+            localhostNameCache.put(hostAddress, true)
+        }
     }
 
     private fun isLocalhost(host: String): Boolean {
         var isLocal = localhostNameCache.get(host)
-        if (isLocal == null) {
+        if (isLocal == null && resolve) {
             isLocal = InetAddress.getAllByName(host)
                     .map { it.hostAddress }
                     .any { localhostNameCache.get(it) ?: false }
